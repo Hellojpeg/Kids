@@ -1,0 +1,3591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Learning Fun! ✝️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            max-width: 1000px;
+            width: 100%;
+            height: 95vh;
+            max-height: 95vh;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .timer-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #ccc;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .mode-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .mode-selector.hidden {
+            display: none;
+        }
+
+        .mode-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .timer {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            text-align: center;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .timer-icon {
+            font-size: 1.2em;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .speaker-btn {
+            background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+
+        .speaker-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .speaker-btn:active {
+            transform: scale(0.95);
+        }
+
+        .game-area {
+            flex: 1;
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .object-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 10px 0;
+            max-width: 450px;
+        }
+
+        .counting-object {
+            width: 60px;
+            height: 60px;
+            font-size: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            filter: grayscale(100%);
+            opacity: 0.5;
+        }
+
+        .counting-object.counted {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .counting-object:hover {
+            transform: scale(1.1);
+        }
+
+        .number-display {
+            font-size: 4em;
+            color: #667eea;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .number-sequence {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .number-box {
+            width: 55px;
+            height: 55px;
+            background: white;
+            border: 3px dashed #ccc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .number-tile {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            cursor: move;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .number-tile:hover {
+            transform: scale(1.1);
+        }
+
+        .number-tile.placed {
+            cursor: default;
+            opacity: 0.5;
+        }
+
+        .dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .drag-area {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
+            margin: 10px 0;
+        }
+
+        .question-text {
+            font-size: 1.5em;
+            color: #333;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .answer-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .answer-btn {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border: 3px solid transparent;
+            border-radius: 12px;
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .answer-btn:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .answer-btn.correct {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            animation: bounce 0.5s;
+        }
+
+        .answer-btn.wrong {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            animation: shake 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+            min-height: 40px;
+        }
+
+        .feedback.correct {
+            color: #4caf50;
+        }
+
+        .feedback.wrong {
+            color: #f44336;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .level-display {
+            text-align: center;
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .level-complete {
+            font-size: 3em;
+            text-align: center;
+            color: #4caf50;
+            font-weight: bold;
+            animation: celebrate 1s infinite;
+        }
+
+        .instruction {
+            font-size: 1.2em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .celebration {
+            font-size: 3em;
+            text-align: center;
+            animation: celebrate 1s infinite;
+        }
+
+        .letter-display {
+            font-size: 8em;
+            color: #667eea;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+        }
+
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+            max-width: 400px;
+        }
+
+        .letter-btn {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border: 3px solid transparent;
+            border-radius: 12px;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+        }
+
+        .letter-btn:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .letter-btn.correct {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            animation: bounce 0.5s;
+        }
+
+        .letter-btn.wrong {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            animation: shake 0.5s;
+        }
+
+        .abc-sequence {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 10px 0;
+            max-width: 600px;
+        }
+
+        .abc-box {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+        }
+
+        .abc-tile {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: white;
+            cursor: move;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+        }
+
+        .abc-tile:hover {
+            transform: scale(1.1);
+        }
+
+        .abc-tile.placed {
+            cursor: default;
+            opacity: 0.5;
+        }
+
+        .shape-display {
+            font-size: 8em;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .shape-svg {
+            width: 150px;
+            height: 150px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .mixed-item {
+            font-size: 6em;
+            text-align: center;
+            margin: 15px 0;
+            color: #667eea;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+
+        .shape-option {
+            width: 100px;
+            height: 100px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border: 3px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .shape-option svg {
+            width: 60px;
+            height: 60px;
+        }
+
+        .shape-option:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .shape-option.correct {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            animation: bounce 0.5s;
+        }
+
+        .shape-option.wrong {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            animation: shake 0.5s;
+        }
+
+        .different-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .different-item {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            border: 4px solid transparent;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .different-item:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+
+        .different-item.correct {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            animation: bounce 0.5s;
+            border-color: #4caf50;
+        }
+
+        .different-item.wrong {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            animation: shake 0.5s;
+            border-color: #f44336;
+        }
+
+        .different-item svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .pick-same-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 15px auto;
+            max-width: 500px;
+        }
+
+        .pick-same-item {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border: 4px solid transparent;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .pick-same-item:hover {
+            transform: scale(1.05);
+        }
+
+        .pick-same-item.selected {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-color: #667eea;
+            border-width: 5px;
+            transform: scale(1.05);
+        }
+
+        .pick-same-item.correct-picked {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            border-color: #4caf50;
+            animation: bounce 0.5s;
+        }
+
+        .pick-same-item.wrong-picked {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+
+        .pick-same-item svg {
+            width: 70px;
+            height: 70px;
+        }
+
+        .check-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 20px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .check-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .check-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #tracingCanvas {
+            border: 4px dashed #667eea;
+            border-radius: 15px;
+            background: white;
+            cursor: crosshair;
+            touch-action: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 100%;
+        }
+
+        .tracing-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tracing-display {
+            font-size: 8em;
+            color: #e0e0e0;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            margin: 10px 0;
+        }
+
+        .tracing-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .clear-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Matching Game Styles */
+        .matching-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+
+        .matching-card {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .matching-card:hover {
+            transform: scale(1.05);
+        }
+
+        .matching-card.flipped {
+            background: white;
+            border: 3px solid #667eea;
+            animation: flip 0.3s;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(90deg); }
+            100% { transform: rotateY(0deg); }
+        }
+
+        .matching-card.matched {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            border: 3px solid #4caf50;
+            animation: matchPulse 0.5s;
+            pointer-events: none;
+        }
+
+        @keyframes matchPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .matching-card.wrong {
+            animation: wrongShake 0.5s;
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .matching-card .card-back {
+            font-size: 2em;
+            color: white;
+        }
+
+        .matching-card .card-front {
+            display: none;
+        }
+
+        .matching-card.flipped .card-back {
+            display: none;
+        }
+
+        .matching-card.flipped .card-front {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .matching-card.matched .card-front {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Word Builder Styles */
+        .word-builder-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .word-image {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .word-slots {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .word-slot {
+            width: 70px;
+            height: 80px;
+            background: white;
+            border: 3px dashed #ccc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .word-slot.filled {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border: 3px solid #667eea;
+        }
+
+        .letter-tiles {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 400px;
+        }
+
+        .letter-tile {
+            width: 60px;
+            height: 70px;
+            background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2em;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+        }
+
+        .letter-tile:hover {
+            transform: scale(1.1);
+        }
+
+        .letter-tile.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .word-hint {
+            font-size: 1.5em;
+            color: #666;
+            text-align: center;
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        /* Bible Verse Memory Styles */
+        .verse-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .verse-reference {
+            font-size: 1.8em;
+            color: #667eea;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .verse-slots-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            max-width: 600px;
+            min-height: 120px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            border: 2px dashed #667eea;
+        }
+
+        .verse-word-slot {
+            min-width: 60px;
+            height: 50px;
+            background: white;
+            border: 3px dashed #ccc;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 12px;
+            font-size: 1.3em;
+            font-weight: 500;
+            color: #667eea;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .verse-word-slot.filled {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border: 3px solid #667eea;
+            animation: fillSlot 0.3s;
+        }
+
+        @keyframes fillSlot {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .verse-word-tiles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            max-width: 600px;
+        }
+
+        .verse-word-tile {
+            min-width: 60px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 12px;
+            font-size: 1.3em;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .verse-word-tile:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+
+        .verse-word-tile.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .verse-complete-display {
+            font-size: 1.5em;
+            color: #333;
+            text-align: center;
+            line-height: 1.6;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-10deg) scale(1.1); }
+            75% { transform: rotate(10deg) scale(1.1); }
+        }
+
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .welcome-title {
+            font-size: 4em;
+            color: #667eea;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+            animation: bounce 1s infinite;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.8em;
+            color: #666;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .welcome-emoji {
+            font-size: 6em;
+            margin: 20px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 25px 60px;
+            border-radius: 30px;
+            font-size: 2.5em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .start-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .game-container.hidden {
+            display: none;
+        }
+
+        #startScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .start-card {
+            background: white;
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 700px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="startScreen">
+        <div class="start-card">
+            <div class="welcome-emoji">✝️</div>
+            <div class="welcome-title">Bible Learning Fun!</div>
+            <div class="welcome-subtitle">Learn with God's Word</div>
+            <div style="font-size: 1.3em; color: #888; margin: 20px 0;">
+                ✨ 13 Fun Games for Christian Kids! ✨
+            </div>
+            <div style="font-size: 1.1em; color: #667eea; margin: 15px 0; font-style: italic;">
+                "Train up a child in the way he should go" - Proverbs 22:6
+            </div>
+            <button class="start-button" onclick="startApp()">🙏 Let's Learn!</button>
+        </div>
+    </div>
+
+    <div class="game-container hidden" id="gameContainer">
+        <div class="header">
+            <h1>✝️ Bible Learning Fun! ✝️</h1>
+            <div class="timer-toggle-container">
+                <span>⏰ Timer:</span>
+                <div class="toggle-switch active" id="timerToggle" onclick="toggleTimer()">
+                    <div class="toggle-slider"></div>
+                </div>
+                <span id="timerStatus">ON</span>
+            </div>
+            <div class="level-display" id="levelDisplay" style="display: none;">
+                <div class="level-badge">Level <span id="levelNumber">1</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <span id="progressText">0/3</span>
+            </div>
+            <div class="score" id="score">Score: 0 🌟</div>
+        </div>
+
+        <div class="mode-selector" id="modeSelector">
+            <button class="mode-btn" onclick="setMode('count')">👆 Click & Count</button>
+            <button class="mode-btn" onclick="setMode('sequence')">🔢 Number Order</button>
+            <button class="mode-btn" onclick="setMode('match')">🎯 Match Numbers</button>
+            <button class="mode-btn" onclick="setMode('quiz')">❓ Counting Quiz</button>
+            <button class="mode-btn" onclick="setMode('letterMatch')">🔤 Letter Match</button>
+            <button class="mode-btn" onclick="setMode('abcOrder')">🔡 ABC Order</button>
+            <button class="mode-btn" onclick="setMode('letterSounds')">🗣️ Letter Sounds</button>
+            <button class="mode-btn" onclick="setMode('shapes')">🔷 Which Shape?</button>
+            <button class="mode-btn" onclick="setMode('pickSame')">✅ Pick All the Same</button>
+            <button class="mode-btn" onclick="setMode('tracing')">✏️ Tracing Practice</button>
+            <button class="mode-btn" onclick="setMode('matching')">🃏 Matching Pairs</button>
+            <button class="mode-btn" onclick="setMode('wordBuilder')">📝 Word Builder</button>
+            <button class="mode-btn" onclick="setMode('verseMemory')">📖 Bible Verse Memory</button>
+            <button class="mode-btn" onclick="setMode('mixed')">👀 Which is Different?</button>
+        </div>
+
+        <div id="backButtonContainer"></div>
+
+        <div class="game-area" id="gameArea">
+            <div style="text-align: center; padding: 40px;">
+                <div style="font-size: 3em; margin-bottom: 20px;">👋</div>
+                <div class="instruction">Pick a game to start counting!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = null;
+        let score = 0;
+        let currentCount = 0;
+        let targetNumber = 0;
+        let quizAnswer = 0;
+        let timerInterval = null;
+        let timeRemaining = 60;
+        let timerEnabled = true; // Timer is ON by default
+
+        // Level system
+        let currentLevel = 1;
+        let questionsInLevel = 0;
+        let questionsCompleted = 0;
+
+        // Level configuration: [questionsPerLevel, timePerQuestion, difficultyModifier]
+        const levelConfig = {
+            1: { questions: 3, time: 60, difficulty: 'easy' },      // 3 questions, 60s each
+            2: { questions: 4, time: 55, difficulty: 'easy' },      // 4 questions, 55s each
+            3: { questions: 5, time: 50, difficulty: 'medium' },    // 5 questions, 50s each
+            4: { questions: 5, time: 45, difficulty: 'medium' },    // 5 questions, 45s each
+            5: { questions: 6, time: 40, difficulty: 'medium' },    // 6 questions, 40s each
+            6: { questions: 6, time: 35, difficulty: 'hard' },      // 6 questions, 35s each
+            7: { questions: 7, time: 30, difficulty: 'hard' },      // 7 questions, 30s each
+            8: { questions: 7, time: 25, difficulty: 'hard' },      // 7 questions, 25s each
+            9: { questions: 8, time: 20, difficulty: 'expert' },    // 8 questions, 20s each
+            10: { questions: 10, time: 15, difficulty: 'expert' }   // 10 questions, 15s each
+        };
+
+        const emojis = ['✝️', '🙏', '📖', '⛪', '🕊️', '🐑', '⭐', '👼', '🎺', '🕯️'];
+        const celebrationEmojis = ['✨', '🌟', '⭐', '💫', '🙏', '✝️'];
+
+        // Toggle timer on/off
+        function toggleTimer() {
+            timerEnabled = !timerEnabled;
+            const toggle = document.getElementById('timerToggle');
+            const status = document.getElementById('timerStatus');
+            
+            if (timerEnabled) {
+                toggle.classList.add('active');
+                status.textContent = 'ON';
+            } else {
+                toggle.classList.remove('active');
+                status.textContent = 'OFF';
+                clearInterval(timerInterval);
+            }
+            
+            speak(timerEnabled ? "Timer turned on" : "Timer turned off");
+        }
+
+        // Text-to-speech function
+        function speak(text) {
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9; // Slightly slower for kids
+            utterance.pitch = 1.1; // Slightly higher pitch
+            utterance.volume = 1;
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Initialize level system
+            currentLevel = 1;
+            questionsCompleted = 0;
+            questionsInLevel = levelConfig[currentLevel].questions;
+            
+            // Show level display
+            document.getElementById('levelDisplay').style.display = 'flex';
+            updateLevelDisplay();
+            
+            // Hide mode selector
+            document.getElementById('modeSelector').classList.add('hidden');
+            
+            // Show back button
+            document.getElementById('backButtonContainer').innerHTML = 
+                '<button class="back-btn" onclick="backToMenu()">⬅️ Back to Menu</button>';
+            
+            // Reset timer
+            clearInterval(timerInterval);
+            timeRemaining = levelConfig[currentLevel].time;
+            
+            // Start new game
+            initGame();
+        }
+
+        function backToMenu() {
+            currentMode = null;
+            clearInterval(timerInterval);
+            
+            // Reset level system
+            currentLevel = 1;
+            questionsCompleted = 0;
+            
+            // Hide level display
+            document.getElementById('levelDisplay').style.display = 'none';
+            
+            // Clear any canvas event listeners
+            if (tracingCanvas) {
+                const oldCanvas = tracingCanvas;
+                const newCanvas = oldCanvas.cloneNode(true);
+                oldCanvas.parentNode.replaceChild(newCanvas, oldCanvas);
+                tracingCanvas = null;
+                tracingCtx = null;
+            }
+            
+            // Reset game state
+            isDrawing = false;
+            selectedIndices = [];
+            
+            // Show mode selector
+            document.getElementById('modeSelector').classList.remove('hidden');
+            
+            // Hide back button
+            document.getElementById('backButtonContainer').innerHTML = '';
+            
+            // Clear game area completely
+            document.getElementById('gameArea').innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 3em; margin-bottom: 20px;">✝️</div>
+                    <div class="instruction">Pick a game to learn!</div>
+                </div>
+            `;
+            
+            speak("Pick a game to learn about God!");
+        }
+
+        function startTimer() {
+            if (!timerEnabled) return; // Don't start timer if disabled
+            
+            clearInterval(timerInterval);
+            timeRemaining = levelConfig[currentLevel].time;
+            
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                const timerElement = document.getElementById('timer');
+                if(timerElement) {
+                    timerElement.textContent = timeRemaining;
+                }
+                
+                if(timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    speak("Time's up! Let's try another one!");
+                    setTimeout(() => {
+                        onQuestionComplete(false); // Count as incomplete
+                    }, 2000);
+                }
+            }, 1000);
+        }
+
+        function updateLevelDisplay() {
+            document.getElementById('levelNumber').textContent = currentLevel;
+            document.getElementById('progressText').textContent = 
+                `${questionsCompleted}/${levelConfig[currentLevel].questions}`;
+            
+            const progress = (questionsCompleted / levelConfig[currentLevel].questions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function onQuestionComplete(correct) {
+            if (correct) {
+                questionsCompleted++;
+                updateLevelDisplay();
+                
+                // Check if level is complete
+                if (questionsCompleted >= levelConfig[currentLevel].questions) {
+                    levelComplete();
+                } else {
+                    // Continue to next question
+                    initGame();
+                }
+            } else {
+                // Even if wrong or timed out, move to next question
+                questionsCompleted++;
+                updateLevelDisplay();
+                
+                if (questionsCompleted >= levelConfig[currentLevel].questions) {
+                    levelComplete();
+                } else {
+                    initGame();
+                }
+            }
+        }
+
+        function levelComplete() {
+            clearInterval(timerInterval);
+            
+            if (currentLevel >= 10) {
+                // Beat all levels!
+                showGameComplete();
+            } else {
+                // Show level complete message
+                const gameArea = document.getElementById('gameArea');
+                gameArea.innerHTML = `
+                    <div class="level-complete">
+                        🎉 Level ${currentLevel} Complete! 🎉
+                    </div>
+                    <div style="text-align: center; margin-top: 30px; font-size: 1.8em; color: #666;">
+                        Get ready for Level ${currentLevel + 1}!
+                    </div>
+                `;
+                
+                speak(`Level ${currentLevel} complete! Great job! Get ready for level ${currentLevel + 1}!`);
+                
+                // Move to next level
+                currentLevel++;
+                questionsCompleted = 0;
+                questionsInLevel = levelConfig[currentLevel].questions;
+                updateLevelDisplay();
+                
+                setTimeout(() => {
+                    initGame();
+                }, 3000);
+            }
+        }
+
+        function showGameComplete() {
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="level-complete">
+                    🏆 YOU WON! 🏆
+                </div>
+                <div style="text-align: center; margin-top: 30px; font-size: 2em; color: #666;">
+                    You beat all 10 levels!
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="next-btn" onclick="restartGame()">🔄 Play Again</button>
+                    <button class="next-btn" onclick="backToMenu()">🏠 Main Menu</button>
+                </div>
+            `;
+            
+            speak("You won! You beat all 10 levels! You're amazing!");
+        }
+
+        function restartGame() {
+            currentLevel = 1;
+            questionsCompleted = 0;
+            questionsInLevel = levelConfig[currentLevel].questions;
+            updateLevelDisplay();
+            initGame();
+        }
+
+        function getTimerHTML() {
+            if (timerEnabled) {
+                return `
+                    <div class="timer">
+                        <span class="timer-icon">⏰</span>
+                        <span id="timer">${levelConfig[currentLevel].time}</span>
+                    </div>
+                `;
+            }
+            return ''; // No timer HTML if disabled
+        }
+
+        function initGame() {
+            const gameArea = document.getElementById('gameArea');
+            
+            switch(currentMode) {
+                case 'count':
+                    startCountingGame();
+                    break;
+                case 'sequence':
+                    startSequenceGame();
+                    break;
+                case 'match':
+                    startMatchGame();
+                    break;
+                case 'quiz':
+                    startQuizGame();
+                    break;
+                case 'letterMatch':
+                    startLetterIdentify();
+                    break;
+                case 'abcOrder':
+                    startABCSequence();
+                    break;
+                case 'letterSounds':
+                    startLetterSounds();
+                    break;
+                case 'shapes':
+                    startShapesGame();
+                    break;
+                case 'pickSame':
+                    startPickSameGame();
+                    break;
+                case 'tracing':
+                    startTracingGame();
+                    break;
+                case 'matching':
+                    startMatchingPairsGame();
+                    break;
+                case 'wordBuilder':
+                    startWordBuilderGame();
+                    break;
+                case 'verseMemory':
+                    startVerseMemoryGame();
+                    break;
+                case 'mixed':
+                    startMixedGame();
+                    break;
+            }
+        }
+
+        function startCountingGame() {
+            targetNumber = Math.floor(Math.random() * 10) + 1;
+            currentCount = 0;
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Click the ${emoji} to count to ${targetNumber}!</div>
+                <div class="number-display">${currentCount}</div>
+                <div class="object-grid">
+            `;
+            
+            for(let i = 0; i < targetNumber; i++) {
+                html += `<div class="counting-object" onclick="countObject(this)">${emoji}</div>`;
+            }
+            
+            html += '</div>';
+            document.getElementById('gameArea').innerHTML = html;
+            
+            // Speak instructions
+            speak(`Click the ${getEmojiName(emoji)} to count to ${targetNumber}!`);
+            startTimer();
+        }
+
+        function speakInstructions() {
+            const instruction = document.getElementById('instruction');
+            if(instruction) {
+                speak(instruction.textContent);
+            }
+        }
+
+        function getEmojiName(emoji) {
+            const emojiNames = {
+                '✝️': 'cross',
+                '🙏': 'praying hands',
+                '📖': 'Bible',
+                '⛪': 'church',
+                '🕊️': 'dove',
+                '🐑': 'sheep',
+                '⭐': 'star',
+                '👼': 'angel',
+                '🎺': 'trumpet',
+                '🕯️': 'candle'
+            };
+            return emojiNames[emoji] || 'symbol';
+        }
+
+        function countObject(element) {
+            if(!element.classList.contains('counted')) {
+                element.classList.add('counted');
+                currentCount++;
+                document.querySelector('.number-display').textContent = currentCount;
+                
+                // Speak the number
+                speak(currentCount.toString());
+                
+                if(currentCount === targetNumber) {
+                    setTimeout(() => {
+                        showSuccess();
+                        speak("Great job! You counted them all!");
+                        score += 10;
+                        updateScore();
+                        setTimeout(startCountingGame, 3000);
+                    }, 500);
+                }
+            }
+        }
+
+        function startSequenceGame() {
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Put the numbers in order from 1 to 10!</div>
+                <div class="number-sequence" id="sequenceBoxes">
+            `;
+            
+            for(let i = 1; i <= 10; i++) {
+                html += `<div class="number-box" data-number="${i}"></div>`;
+            }
+            
+            html += `</div>
+                <div class="drag-area" id="dragArea">`;
+            
+            // Create shuffled numbers
+            let numbers = Array.from({length: 10}, (_, i) => i + 1);
+            numbers.sort(() => Math.random() - 0.5);
+            
+            numbers.forEach(num => {
+                html += `<div class="number-tile" draggable="true" data-number="${num}" ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)" ontouchend="handleTouchEnd(event)">${num}</div>`;
+            });
+            
+            html += '</div>';
+            document.getElementById('gameArea').innerHTML = html;
+            
+            speak("Put the numbers in order from 1 to 10! Drag each number to its spot.");
+            startTimer();
+            setupDragAndDrop();
+        }
+
+        // Touch event handling for mobile
+        let draggedElement = null;
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        function handleTouchStart(e) {
+            draggedElement = e.target;
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            draggedElement.classList.add('dragging');
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+        }
+
+        function handleTouchEnd(e) {
+            if(!draggedElement) return;
+            
+            const touch = e.changedTouches[0];
+            const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            if(dropTarget && dropTarget.classList.contains('number-box')) {
+                const number = draggedElement.dataset.number;
+                const boxNumber = dropTarget.dataset.number;
+                
+                if(number === boxNumber && dropTarget.textContent === '') {
+                    dropTarget.textContent = number;
+                    dropTarget.style.background = 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)';
+                    draggedElement.classList.add('placed');
+                    speak(number);
+                    checkSequenceComplete();
+                }
+            }
+            
+            draggedElement.classList.remove('dragging');
+            draggedElement = null;
+        }
+
+        function setupDragAndDrop() {
+            const tiles = document.querySelectorAll('.number-tile');
+            const boxes = document.querySelectorAll('.number-box');
+            
+            tiles.forEach(tile => {
+                tile.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.dataset.number);
+                    e.target.classList.add('dragging');
+                });
+                
+                tile.addEventListener('dragend', (e) => {
+                    e.target.classList.remove('dragging');
+                });
+            });
+            
+            boxes.forEach(box => {
+                box.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                });
+                
+                box.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const number = e.dataTransfer.getData('text/plain');
+                    const boxNumber = e.target.dataset.number;
+                    
+                    if(number === boxNumber && e.target.textContent === '') {
+                        e.target.textContent = number;
+                        e.target.style.background = 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)';
+                        
+                        const draggedTile = document.querySelector(`.number-tile[data-number="${number}"]:not(.placed)`);
+                        if(draggedTile) {
+                            draggedTile.classList.add('placed');
+                        }
+                        
+                        speak(number);
+                        checkSequenceComplete();
+                    }
+                });
+            });
+        }
+
+        function checkSequenceComplete() {
+            const boxes = document.querySelectorAll('.number-box');
+            let allFilled = true;
+            
+            boxes.forEach(box => {
+                if(box.textContent === '') {
+                    allFilled = false;
+                }
+            });
+            
+            if(allFilled) {
+                clearInterval(timerInterval);
+                showSuccess();
+                speak("Perfect! You put all the numbers in order!");
+                score += 20;
+                updateScore();
+                setTimeout(startSequenceGame, 3000);
+            }
+        }
+
+        function startMatchGame() {
+            const number = Math.floor(Math.random() * 10) + 1;
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const emojiName = getEmojiName(emoji);
+            
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Count the ${emojiName}s and pick the right number!</div>
+                <div class="object-grid">
+            `;
+            
+            for(let i = 0; i < number; i++) {
+                html += `<div class="counting-object counted">${emoji}</div>`;
+            }
+            
+            html += `</div>
+                <div class="question-text">How many ${emoji}?</div>
+                <div class="answer-buttons">`;
+            
+            let options = [number];
+            while(options.length < 4) {
+                let opt = Math.floor(Math.random() * 10) + 1;
+                if(!options.includes(opt)) {
+                    options.push(opt);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+            
+            options.forEach(opt => {
+                html += `<button class="answer-btn" onclick="checkMatchAnswer(${opt}, ${number})">${opt}</button>`;
+            });
+            
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+            
+            speak(`Count the ${emojiName}s and pick the right number! How many ${emojiName}s do you see?`);
+            startTimer();
+        }
+
+        function checkMatchAnswer(selected, correct) {
+            clearInterval(timerInterval);
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.answer-btn');
+            
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if(parseInt(btn.textContent) === selected) {
+                    if(selected === correct) {
+                        btn.classList.add('correct');
+                        feedback.textContent = '🎉 Amazing!';
+                        feedback.className = 'feedback correct';
+                        speak(`Yes! The answer is ${correct}! Amazing job!`);
+                        score += 10;
+                        updateScore();
+                        setTimeout(startMatchGame, 3000);
+                    } else {
+                        btn.classList.add('wrong');
+                        feedback.innerHTML = '😊 Try again!<br><button class="next-btn" onclick="resetMatchButtons()" style="margin: 5px;">🔄 Try Again</button><button class="next-btn" onclick="startMatchGame()" style="margin: 5px;">⏭️ Skip</button>';
+                        feedback.className = 'feedback wrong';
+                        speak(`Not quite! You can try again or skip to the next one!`);
+                    }
+                }
+            });
+        }
+
+        function resetMatchButtons() {
+            const buttons = document.querySelectorAll('.answer-btn');
+            const feedback = document.getElementById('feedback');
+            
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('wrong', 'correct');
+            });
+            
+            feedback.innerHTML = '';
+            speak("Try again! Count carefully!");
+        }
+
+        function startQuizGame() {
+            quizAnswer = Math.floor(Math.random() * 10) + 1;
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const emojiName = getEmojiName(emoji);
+            
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="question-text" id="instruction">How many ${emoji} do you see?</div>
+                <div class="object-grid">
+            `;
+            
+            for(let i = 0; i < quizAnswer; i++) {
+                html += `<div class="counting-object counted">${emoji}</div>`;
+            }
+            
+            html += `</div>
+                <div class="answer-buttons">`;
+            
+            let options = [quizAnswer];
+            while(options.length < 4) {
+                let opt = Math.floor(Math.random() * 10) + 1;
+                if(!options.includes(opt)) {
+                    options.push(opt);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+            
+            options.forEach(opt => {
+                html += `<button class="answer-btn" onclick="checkQuizAnswer(${opt})">${opt}</button>`;
+            });
+            
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+            
+            speak(`How many ${emojiName}s do you see? Count them and pick the number!`);
+            startTimer();
+        }
+
+        function checkQuizAnswer(answer) {
+            clearInterval(timerInterval);
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.answer-btn');
+            
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if(parseInt(btn.textContent) === answer) {
+                    if(answer === quizAnswer) {
+                        btn.classList.add('correct');
+                        feedback.textContent = '⭐ Perfect!';
+                        feedback.className = 'feedback correct';
+                        speak(`Perfect! The answer is ${answer}! You're so smart!`);
+                        score += 10;
+                        updateScore();
+                        setTimeout(startQuizGame, 3000);
+                    } else {
+                        btn.classList.add('wrong');
+                        feedback.innerHTML = '💪 Keep trying!<br><button class="next-btn" onclick="resetQuizButtons()" style="margin: 5px;">🔄 Try Again</button><button class="next-btn" onclick="startQuizGame()" style="margin: 5px;">⏭️ Skip</button>';
+                        feedback.className = 'feedback wrong';
+                        speak("Good try! You can try again or skip to the next one!");
+                    }
+                }
+            });
+        }
+
+        function resetQuizButtons() {
+            const buttons = document.querySelectorAll('.answer-btn');
+            const feedback = document.getElementById('feedback');
+            
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('wrong', 'correct');
+            });
+            
+            feedback.innerHTML = '';
+            speak("Try again! Count carefully!");
+        }
+
+        function showSuccess() {
+            const celebration = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
+            const feedback = document.createElement('div');
+            feedback.className = 'celebration';
+            feedback.textContent = celebration.repeat(3);
+            document.getElementById('gameArea').prepend(feedback);
+            
+            setTimeout(() => {
+                feedback.remove();
+            }, 1500);
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Score: ${score} 🌟`;
+        }
+
+        // Alphabet game functions
+        let currentLetter = '';
+
+        function startLetterIdentify() {
+            // Pick a random letter
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            currentLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Find the letter ${currentLetter}!</div>
+                <div class="letter-display">${currentLetter}</div>
+                <div class="letter-grid">
+            `;
+
+            // Create 4 letter options
+            let options = [currentLetter];
+            while(options.length < 4) {
+                let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if(!options.includes(randomLetter)) {
+                    options.push(randomLetter);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(letter => {
+                html += `<button class="letter-btn" onclick="checkLetterAnswer('${letter}')">${letter}</button>`;
+            });
+
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+
+            speak(`Find the letter ${currentLetter}!`);
+            startTimer();
+        }
+
+        function checkLetterAnswer(selected) {
+            clearInterval(timerInterval);
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.letter-btn');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if(btn.textContent === selected) {
+                    if(selected === currentLetter) {
+                        btn.classList.add('correct');
+                        feedback.textContent = '🎉 Perfect!';
+                        feedback.className = 'feedback correct';
+                        speak(`Yes! That's the letter ${currentLetter}! Great job!`);
+                        score += 10;
+                        updateScore();
+                        setTimeout(startLetterIdentify, 3000);
+                    } else {
+                        btn.classList.add('wrong');
+                        feedback.innerHTML = '😊 Try again!<br><button class="next-btn" onclick="resetLetterButtons()" style="margin: 5px;">🔄 Try Again</button><button class="next-btn" onclick="startLetterIdentify()" style="margin: 5px;">⏭️ Skip</button>';
+                        feedback.className = 'feedback wrong';
+                        speak(`Not quite! You can try again or skip to the next letter!`);
+                    }
+                }
+            });
+        }
+
+        function resetLetterButtons() {
+            const buttons = document.querySelectorAll('.letter-btn');
+            const feedback = document.getElementById('feedback');
+            
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('wrong', 'correct');
+            });
+            
+            feedback.innerHTML = '';
+            speak(`Try again! Find the letter ${currentLetter}!`);
+        }
+
+        function startABCSequence() {
+            // Random 5-letter sequence from the alphabet
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const startIndex = Math.floor(Math.random() * 22); // 0-21 so we can get 5 letters
+            const sequence = alphabet.slice(startIndex, startIndex + 5);
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Put the letters in ABC order!</div>
+                <div class="abc-sequence" id="abcSequence">
+            `;
+
+            // Create boxes for the sequence
+            for(let i = 0; i < 5; i++) {
+                html += `<div class="abc-box" data-letter="${sequence[i]}"></div>`;
+            }
+
+            html += `</div><div class="drag-area" id="dragArea">`;
+
+            // Create shuffled letter tiles
+            let letters = sequence.split('');
+            letters.sort(() => Math.random() - 0.5);
+
+            letters.forEach(letter => {
+                html += `<div class="abc-tile" draggable="true" data-letter="${letter}" ontouchstart="handleABCTouchStart(event)" ontouchmove="handleTouchMove(event)" ontouchend="handleABCTouchEnd(event)">${letter}</div>`;
+            });
+
+            html += '</div>';
+            document.getElementById('gameArea').innerHTML = html;
+
+            speak(`Put the letters in ABC order! From ${sequence[0]} to ${sequence[4]}.`);
+            startTimer();
+            setupABCDragAndDrop();
+        }
+
+        // Touch handling for ABC tiles
+        function handleABCTouchStart(e) {
+            draggedElement = e.target;
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            draggedElement.classList.add('dragging');
+        }
+
+        function handleABCTouchEnd(e) {
+            if(!draggedElement) return;
+
+            const touch = e.changedTouches[0];
+            const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+
+            if(dropTarget && dropTarget.classList.contains('abc-box')) {
+                const letter = draggedElement.dataset.letter;
+                const boxLetter = dropTarget.dataset.letter;
+
+                if(letter === boxLetter && dropTarget.textContent === '') {
+                    dropTarget.textContent = letter;
+                    dropTarget.style.background = 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)';
+                    draggedElement.classList.add('placed');
+                    speak(letter);
+                    checkABCComplete();
+                }
+            }
+
+            draggedElement.classList.remove('dragging');
+            draggedElement = null;
+        }
+
+        function setupABCDragAndDrop() {
+            const tiles = document.querySelectorAll('.abc-tile');
+            const boxes = document.querySelectorAll('.abc-box');
+
+            tiles.forEach(tile => {
+                tile.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.dataset.letter);
+                    e.target.classList.add('dragging');
+                });
+
+                tile.addEventListener('dragend', (e) => {
+                    e.target.classList.remove('dragging');
+                });
+            });
+
+            boxes.forEach(box => {
+                box.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                });
+
+                box.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const letter = e.dataTransfer.getData('text/plain');
+                    const boxLetter = e.target.dataset.letter;
+
+                    if(letter === boxLetter && e.target.textContent === '') {
+                        e.target.textContent = letter;
+                        e.target.style.background = 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)';
+
+                        const draggedTile = document.querySelector(`.abc-tile[data-letter="${letter}"]:not(.placed)`);
+                        if(draggedTile) {
+                            draggedTile.classList.add('placed');
+                        }
+
+                        speak(letter);
+                        checkABCComplete();
+                    }
+                });
+            });
+        }
+
+        function checkABCComplete() {
+            const boxes = document.querySelectorAll('.abc-box');
+            let allFilled = true;
+
+            boxes.forEach(box => {
+                if(box.textContent === '') {
+                    allFilled = false;
+                }
+            });
+
+            if(allFilled) {
+                clearInterval(timerInterval);
+                showSuccess();
+                speak("Amazing! You know your ABCs!");
+                score += 20;
+                updateScore();
+                setTimeout(startABCSequence, 3000);
+            }
+        }
+
+        function startLetterSounds() {
+            // Pick a random letter and show words that start with it
+            const letterWords = {
+                'A': ['Apple', 'Ant', 'Alligator'],
+                'B': ['Ball', 'Bear', 'Banana'],
+                'C': ['Cat', 'Car', 'Cookie'],
+                'D': ['Dog', 'Duck', 'Dinosaur'],
+                'E': ['Egg', 'Elephant', 'Eagle'],
+                'F': ['Fish', 'Frog', 'Flower'],
+                'G': ['Goat', 'Grape', 'Guitar'],
+                'H': ['Hat', 'Horse', 'House'],
+                'I': ['Ice cream', 'Igloo', 'Insect'],
+                'J': ['Jump', 'Juice', 'Jacket'],
+                'K': ['Kite', 'King', 'Kangaroo'],
+                'L': ['Lion', 'Leaf', 'Lemon'],
+                'M': ['Moon', 'Monkey', 'Mouse'],
+                'N': ['Nest', 'Nose', 'Nut'],
+                'O': ['Orange', 'Owl', 'Ocean'],
+                'P': ['Pig', 'Pizza', 'Pencil'],
+                'Q': ['Queen', 'Quilt', 'Question'],
+                'R': ['Rabbit', 'Rainbow', 'Robot'],
+                'S': ['Sun', 'Star', 'Snake'],
+                'T': ['Tree', 'Tiger', 'Turtle'],
+                'U': ['Umbrella', 'Unicorn', 'Up'],
+                'V': ['Van', 'Violin', 'Volcano'],
+                'W': ['Water', 'Whale', 'Window'],
+                'X': ['X-ray', 'Xylophone', 'Fox'],
+                'Y': ['Yellow', 'Yo-yo', 'Yak'],
+                'Z': ['Zebra', 'Zoo', 'Zipper']
+            };
+
+            const alphabet = Object.keys(letterWords);
+            currentLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+            const word = letterWords[currentLetter][Math.floor(Math.random() * letterWords[currentLetter].length)];
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">${word} starts with which letter?</div>
+                <div class="question-text">${word}</div>
+                <div class="letter-grid">
+            `;
+
+            // Create 4 letter options
+            let options = [currentLetter];
+            while(options.length < 4) {
+                let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if(!options.includes(randomLetter)) {
+                    options.push(randomLetter);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(letter => {
+                html += `<button class="letter-btn" onclick="checkSoundAnswer('${letter}')">${letter}</button>`;
+            });
+
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+
+            speak(`${word} starts with which letter? Listen: ${word}. What letter does it start with?`);
+            startTimer();
+        }
+
+        function checkSoundAnswer(selected) {
+            clearInterval(timerInterval);
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.letter-btn');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if(btn.textContent === selected) {
+                    if(selected === currentLetter) {
+                        btn.classList.add('correct');
+                        feedback.textContent = '🎉 Correct!';
+                        feedback.className = 'feedback correct';
+                        speak(`Yes! ${selected} is correct! Great listening!`);
+                        score += 10;
+                        updateScore();
+                        setTimeout(startLetterSounds, 3000);
+                    } else {
+                        btn.classList.add('wrong');
+                        feedback.innerHTML = '💪 Keep trying!<br><button class="next-btn" onclick="resetSoundButtons()" style="margin: 5px;">🔄 Try Again</button><button class="next-btn" onclick="startLetterSounds()" style="margin: 5px;">⏭️ Skip</button>';
+                        feedback.className = 'feedback wrong';
+                        speak(`Not quite! You can try again or skip to the next word!`);
+                    }
+                }
+            });
+        }
+
+        function resetSoundButtons() {
+            const buttons = document.querySelectorAll('.letter-btn');
+            const feedback = document.getElementById('feedback');
+            
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('wrong', 'correct');
+            });
+            
+            feedback.innerHTML = '';
+            const instruction = document.getElementById('instruction');
+            if(instruction) {
+                speak(instruction.textContent);
+            }
+        }
+
+        // Speak welcome message on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                speak("Welcome to Bible Learning Fun! Press Let's Learn to start!");
+            }, 500);
+        });
+
+        // Start the app - transition from start screen to game
+        function startApp() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameContainer').classList.remove('hidden');
+            speak("Pick a game to learn about God's Word!");
+        }
+
+        // Bible Verse Memory Game - Put verse in correct order
+        let currentVerse = null;
+        let verseWordSlots = [];
+        let verseProgress = [];
+
+        const bibleVerses = [
+            // Short complete verses for easy levels
+            { reference: "1 John 4:8", verse: "God is love", level: 'easy' },
+            { reference: "John 11:35", verse: "Jesus wept", level: 'easy' },
+            { reference: "1 Thessalonians 5:16", verse: "Rejoice always", level: 'easy' },
+            { reference: "1 Thessalonians 5:17", verse: "Pray without ceasing", level: 'easy' },
+            { reference: "Exodus 20:12", verse: "Honor your father and your mother", level: 'easy' },
+            { reference: "Psalm 118:24", verse: "This is the day that the Lord has made", level: 'easy' },
+            
+            // Medium complete verses
+            { reference: "John 3:16a", verse: "For God so loved the world that he gave his only Son", level: 'medium' },
+            { reference: "Proverbs 3:5", verse: "Trust in the Lord with all your heart", level: 'medium' },
+            { reference: "Psalm 23:1", verse: "The Lord is my shepherd I shall not want", level: 'medium' },
+            { reference: "Joshua 1:9a", verse: "Be strong and courageous do not be frightened", level: 'medium' },
+            { reference: "Philippians 4:13", verse: "I can do all things through him who strengthens me", level: 'medium' },
+            { reference: "Jeremiah 29:11a", verse: "For I know the plans I have for you declares the Lord", level: 'medium' },
+            { reference: "Psalm 46:1", verse: "God is our refuge and strength a very present help in trouble", level: 'medium' },
+            { reference: "Matthew 5:16a", verse: "Let your light shine before others", level: 'medium' },
+            
+            // Longer complete verses for hard levels
+            { reference: "Romans 8:28", verse: "And we know that for those who love God all things work together for good", level: 'hard' },
+            { reference: "Proverbs 22:6", verse: "Train up a child in the way he should go even when he is old he will not depart from it", level: 'hard' },
+            { reference: "Psalm 119:105", verse: "Your word is a lamp to my feet and a light to my path", level: 'hard' },
+            { reference: "Matthew 22:37-38", verse: "You shall love the Lord your God with all your heart and with all your soul and with all your mind", level: 'hard' },
+            { reference: "Philippians 4:6a", verse: "Do not be anxious about anything but in everything by prayer and supplication with thanksgiving let your requests be made known to God", level: 'hard' }
+        ];
+
+        function startVerseMemoryGame() {
+            verseWordSlots = [];
+            verseProgress = [];
+            
+            // Get difficulty level
+            const difficulty = levelConfig[currentLevel].difficulty;
+            
+            // Filter verses by difficulty
+            let availableVerses = bibleVerses.filter(v => {
+                if (difficulty === 'easy') return v.level === 'easy';
+                if (difficulty === 'medium') return v.level === 'easy' || v.level === 'medium';
+                if (difficulty === 'hard' || difficulty === 'expert') return v.level === 'medium' || v.level === 'hard';
+                return true;
+            });
+            
+            // Pick random verse
+            currentVerse = availableVerses[Math.floor(Math.random() * availableVerses.length)];
+            
+            // Split verse into words
+            const words = currentVerse.verse.split(' ');
+            verseWordSlots = words;
+            
+            // Shuffle words for tiles
+            let shuffledWords = [...words];
+            for (let i = shuffledWords.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledWords[i], shuffledWords[j]] = [shuffledWords[j], shuffledWords[i]];
+            }
+            
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Put the Bible verse in order!</div>
+                <div class="verse-container">
+                    <div class="verse-reference">${currentVerse.reference}</div>
+                    
+                    <div class="verse-slots-container" id="verseSlots">
+            `;
+            
+            // Create empty slots
+            words.forEach((word, index) => {
+                html += `<div class="verse-word-slot" data-position="${index}"></div>`;
+            });
+            
+            html += `</div>
+                    <div class="verse-word-tiles" id="verseTiles">`;
+            
+            // Create word tiles
+            shuffledWords.forEach((word, index) => {
+                html += `<div class="verse-word-tile" onclick="selectVerseWord('${word}', ${index})" data-index="${index}">${word}</div>`;
+            });
+            
+            html += `</div>
+                    <button class="clear-btn" onclick="clearVerse()">🗑️ Clear</button>
+                    <button class="next-btn" onclick="showVerseAnswer()">👀 Show Answer</button>
+                </div>
+                <div class="feedback" id="feedback"></div>
+            `;
+            
+            document.getElementById('gameArea').innerHTML = html;
+            
+            speak(`Put the Bible verse in order! ${currentVerse.reference}`);
+            startTimer();
+        }
+
+        function selectVerseWord(word, tileIndex) {
+            // Find next empty slot
+            const slots = document.querySelectorAll('.verse-word-slot');
+            let emptySlot = null;
+            let slotIndex = -1;
+            
+            for (let i = 0; i < slots.length; i++) {
+                if (slots[i].textContent === '') {
+                    emptySlot = slots[i];
+                    slotIndex = i;
+                    break;
+                }
+            }
+            
+            if (emptySlot) {
+                // Fill the slot
+                emptySlot.textContent = word;
+                emptySlot.classList.add('filled');
+                emptySlot.dataset.tileIndex = tileIndex;
+                
+                // Mark tile as used
+                const tile = document.querySelector(`.verse-word-tile[data-index="${tileIndex}"]`);
+                tile.classList.add('used');
+                
+                verseProgress.push({ word, tileIndex, slotIndex });
+                
+                // Speak the word
+                speak(word);
+                
+                // Check if verse is complete
+                if (verseProgress.length === verseWordSlots.length) {
+                    checkVerse();
+                }
+            }
+        }
+
+        function checkVerse() {
+            const builtVerse = verseProgress.map(w => w.word).join(' ');
+            const correctVerse = currentVerse.verse;
+            clearInterval(timerInterval);
+            
+            if (builtVerse === correctVerse) {
+                // Correct!
+                const feedback = document.getElementById('feedback');
+                feedback.innerHTML = `
+                    <div class="verse-complete-display">
+                        🎉 Perfect! 🎉<br><br>
+                        "${correctVerse}"<br>
+                        <em>- ${currentVerse.reference}</em>
+                    </div>
+                `;
+                feedback.className = 'feedback correct';
+                
+                speak(`Perfect! You got the verse right! ${correctVerse}. ${currentVerse.reference}`);
+                showSuccess();
+                score += 20;
+                updateScore();
+                
+                setTimeout(() => onQuestionComplete(true), 3000);
+            } else {
+                // Wrong order
+                const feedback = document.getElementById('feedback');
+                feedback.innerHTML = '😊 Not quite the right order!<br><button class="next-btn" onclick="clearVerse()" style="margin: 5px;">🔄 Try Again</button><button class="next-btn" onclick="showVerseAnswer()" style="margin: 5px;">👀 Show Answer</button>';
+                feedback.className = 'feedback wrong';
+                
+                speak("Not quite the right order! Try again or see the answer!");
+                
+                // Shake the slots
+                const slots = document.querySelectorAll('.verse-word-slot');
+                slots.forEach(slot => {
+                    slot.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        slot.style.animation = '';
+                    }, 500);
+                });
+            }
+        }
+
+        function clearVerse() {
+            // Clear all slots
+            const slots = document.querySelectorAll('.verse-word-slot');
+            slots.forEach(slot => {
+                slot.textContent = '';
+                slot.classList.remove('filled');
+                delete slot.dataset.tileIndex;
+            });
+            
+            // Unmark all tiles
+            const tiles = document.querySelectorAll('.verse-word-tile');
+            tiles.forEach(tile => {
+                tile.classList.remove('used');
+            });
+            
+            // Clear feedback
+            const feedback = document.getElementById('feedback');
+            feedback.innerHTML = '';
+            
+            verseProgress = [];
+            speak("Try again! Put the verse in order!");
+        }
+
+        function showVerseAnswer() {
+            // Show the correct verse
+            const feedback = document.getElementById('feedback');
+            feedback.innerHTML = `
+                <div class="verse-complete-display">
+                    📖 The Answer:<br><br>
+                    "${currentVerse.verse}"<br>
+                    <em>- ${currentVerse.reference}</em><br><br>
+                    <button class="next-btn" onclick="startVerseMemoryGame()">⏭️ Next Verse</button>
+                </div>
+            `;
+            feedback.className = 'feedback';
+            
+            speak(`The answer is: ${currentVerse.verse}. ${currentVerse.reference}`);
+            clearInterval(timerInterval);
+        }
+
+        // Word Builder Game - Spell simple words
+        let currentWord = '';
+        let currentWordLetters = [];
+        let wordBuilderSlots = [];
+
+        const wordList = {
+            3: [
+                { word: 'GOD', emoji: '✝️', hint: 'Our Creator' },
+                { word: 'ARK', emoji: '⛵', hint: 'Noah built it' },
+                { word: 'JOY', emoji: '😊', hint: 'Fruit of Spirit' },
+                { word: 'SIN', emoji: '❌', hint: 'Doing wrong' },
+                { word: 'SON', emoji: '👶', hint: 'Jesus is God\'s' },
+                { word: 'SEA', emoji: '🌊', hint: 'Moses parted it' },
+                { word: 'DAY', emoji: '☀️', hint: 'God made light' },
+                { word: 'EVE', emoji: '👩', hint: 'First woman' },
+                { word: 'LAW', emoji: '📜', hint: 'God\'s rules' },
+                { word: 'SUN', emoji: '☀️', hint: 'God made it' },
+                { word: 'SKY', emoji: '☁️', hint: 'Heaven above' },
+                { word: 'WAY', emoji: '🛤️', hint: 'Jesus is the' },
+                { word: 'BOW', emoji: '🌈', hint: 'God\'s promise' },
+                { word: 'NET', emoji: '🎣', hint: 'Fish with it' },
+                { word: 'OIL', emoji: '🫙', hint: 'For anointing' }
+            ],
+            4: [
+                { word: 'PRAY', emoji: '🙏', hint: 'Talk to God' },
+                { word: 'LOVE', emoji: '❤️', hint: 'God is this' },
+                { word: 'KING', emoji: '👑', hint: 'Jesus is our' },
+                { word: 'LAMB', emoji: '🐑', hint: 'Jesus the Lamb' },
+                { word: 'DOVE', emoji: '🕊️', hint: 'Holy Spirit sign' },
+                { word: 'NOAH', emoji: '👨', hint: 'Built the ark' },
+                { word: 'STAR', emoji: '⭐', hint: 'Led wise men' },
+                { word: 'FISH', emoji: '🐟', hint: 'Jesus fed 5000' },
+                { word: 'ADAM', emoji: '👨', hint: 'First man' },
+                { word: 'HOLY', emoji: '✨', hint: 'God is this' },
+                { word: 'GOOD', emoji: '👍', hint: 'God is this' },
+                { word: 'ROCK', emoji: '🪨', hint: 'God is our' },
+                { word: 'SAVE', emoji: '🛟', hint: 'Jesus came to' },
+                { word: 'HOPE', emoji: '🌅', hint: 'Trust in God' },
+                { word: 'LIFE', emoji: '🌱', hint: 'Jesus gives it' }
+            ]
+        };
+
+        function startWordBuilderGame() {
+            wordBuilderSlots = [];
+            
+            // Determine word length based on level
+            const difficulty = levelConfig[currentLevel].difficulty;
+            let wordLength;
+            
+            if (difficulty === 'easy') wordLength = 3;
+            else if (difficulty === 'medium') wordLength = Math.random() < 0.5 ? 3 : 4;
+            else wordLength = 4;
+            
+            // Pick a random word
+            const words = wordList[wordLength];
+            const wordObj = words[Math.floor(Math.random() * words.length)];
+            currentWord = wordObj.word;
+            currentWordLetters = currentWord.split('');
+            
+            // Create extra letters for challenge
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let availableLetters = [...currentWordLetters];
+            
+            // Add 3-5 random extra letters
+            const numExtra = 3 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < numExtra; i++) {
+                let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                availableLetters.push(randomLetter);
+            }
+            
+            // Shuffle letters
+            for (let i = availableLetters.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [availableLetters[i], availableLetters[j]] = [availableLetters[j], availableLetters[i]];
+            }
+            
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Spell the word!</div>
+                <div class="word-builder-container">
+                    <div class="word-image">${wordObj.emoji}</div>
+                    <div class="word-hint">${wordObj.hint}</div>
+                    <div class="word-slots" id="wordSlots">
+            `;
+            
+            // Create empty slots
+            for (let i = 0; i < currentWordLetters.length; i++) {
+                html += `<div class="word-slot" data-position="${i}"></div>`;
+            }
+            
+            html += `</div>
+                    <div class="letter-tiles" id="letterTiles">`;
+            
+            // Create letter tiles
+            availableLetters.forEach((letter, index) => {
+                html += `<div class="letter-tile" onclick="selectLetter('${letter}', ${index})" data-index="${index}">${letter}</div>`;
+            });
+            
+            html += `</div>
+                    <button class="clear-btn" onclick="clearWord()">🗑️ Clear Word</button>
+                </div>
+                <div class="feedback" id="feedback"></div>
+            `;
+            
+            document.getElementById('gameArea').innerHTML = html;
+            
+            speak(`Spell the word! Look at the picture and the hint: ${wordObj.hint}`);
+            startTimer();
+        }
+
+        function selectLetter(letter, tileIndex) {
+            // Find next empty slot
+            const slots = document.querySelectorAll('.word-slot');
+            let emptySlot = null;
+            let slotIndex = -1;
+            
+            for (let i = 0; i < slots.length; i++) {
+                if (slots[i].textContent === '') {
+                    emptySlot = slots[i];
+                    slotIndex = i;
+                    break;
+                }
+            }
+            
+            if (emptySlot) {
+                // Fill the slot
+                emptySlot.textContent = letter;
+                emptySlot.classList.add('filled');
+                emptySlot.dataset.tileIndex = tileIndex;
+                
+                // Mark tile as used
+                const tile = document.querySelector(`.letter-tile[data-index="${tileIndex}"]`);
+                tile.classList.add('used');
+                
+                wordBuilderSlots.push({ letter, tileIndex, slotIndex });
+                
+                // Speak the letter
+                speak(letter);
+                
+                // Check if word is complete
+                if (wordBuilderSlots.length === currentWordLetters.length) {
+                    checkWord();
+                }
+            }
+        }
+
+        function checkWord() {
+            const builtWord = wordBuilderSlots.map(s => s.letter).join('');
+            clearInterval(timerInterval);
+            
+            if (builtWord === currentWord) {
+                // Correct!
+                const feedback = document.getElementById('feedback');
+                feedback.textContent = '🎉 Perfect! You spelled it!';
+                feedback.className = 'feedback correct';
+                
+                speak(`Perfect! You spelled ${currentWord}!`);
+                showSuccess();
+                score += 15;
+                updateScore();
+                
+                setTimeout(() => onQuestionComplete(true), 2000);
+            } else {
+                // Wrong
+                const feedback = document.getElementById('feedback');
+                feedback.innerHTML = '😊 Not quite!<br><button class="next-btn" onclick="clearWord()" style="margin: 5px;">🔄 Try Again</button><button class="next-btn" onclick="startWordBuilderGame()" style="margin: 5px;">⏭️ Skip</button>';
+                feedback.className = 'feedback wrong';
+                
+                speak("Not quite! Try again or skip!");
+                
+                // Shake the slots
+                const slots = document.querySelectorAll('.word-slot');
+                slots.forEach(slot => {
+                    slot.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        slot.style.animation = '';
+                    }, 500);
+                });
+            }
+        }
+
+        function clearWord() {
+            // Clear all slots
+            const slots = document.querySelectorAll('.word-slot');
+            slots.forEach(slot => {
+                slot.textContent = '';
+                slot.classList.remove('filled');
+                delete slot.dataset.tileIndex;
+            });
+            
+            // Unmark all tiles
+            const tiles = document.querySelectorAll('.letter-tile');
+            tiles.forEach(tile => {
+                tile.classList.remove('used');
+            });
+            
+            // Clear feedback
+            const feedback = document.getElementById('feedback');
+            feedback.innerHTML = '';
+            
+            wordBuilderSlots = [];
+            speak("Try again! Spell the word!");
+        }
+
+        // Matching Pairs Game - Memory/Concentration Game
+        let matchingCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let canFlip = true;
+
+        function startMatchingPairsGame() {
+            flippedCards = [];
+            matchedPairs = 0;
+            canFlip = true;
+            
+            // Determine number of pairs based on level
+            const difficulty = levelConfig[currentLevel].difficulty;
+            let numPairs;
+            
+            if (difficulty === 'easy') numPairs = 4;      // 8 cards
+            else if (difficulty === 'medium') numPairs = 6; // 12 cards
+            else if (difficulty === 'hard') numPairs = 8;   // 16 cards
+            else numPairs = 8; // expert - 16 cards
+            
+            // Create pairs (numbers, letters, or emojis)
+            const types = ['numbers', 'letters', 'emojis'];
+            const matchType = types[Math.floor(Math.random() * types.length)];
+            
+            matchingCards = [];
+            
+            if (matchType === 'numbers') {
+                const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+                for (let i = 0; i < numPairs; i++) {
+                    matchingCards.push(numbers[i]);
+                    matchingCards.push(numbers[i]);
+                }
+            } else if (matchType === 'letters') {
+                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                for (let i = 0; i < numPairs; i++) {
+                    matchingCards.push(letters[i]);
+                    matchingCards.push(letters[i]);
+                }
+            } else {
+                for (let i = 0; i < numPairs; i++) {
+                    matchingCards.push(emojis[i % emojis.length]);
+                    matchingCards.push(emojis[i % emojis.length]);
+                }
+            }
+            
+            // Shuffle cards
+            for (let i = matchingCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [matchingCards[i], matchingCards[j]] = [matchingCards[j], matchingCards[i]];
+            }
+            
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Find all the matching pairs!</div>
+                <div class="matching-grid" style="grid-template-columns: repeat(${numPairs <= 4 ? 4 : 4}, 1fr);">
+            `;
+            
+            matchingCards.forEach((card, index) => {
+                html += `
+                    <div class="matching-card" onclick="flipCard(${index})" data-index="${index}">
+                        <div class="card-back">?</div>
+                        <div class="card-front">${card}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+            
+            speak(`Find all the matching pairs! Tap a card to flip it!`);
+            startTimer();
+        }
+
+        function flipCard(index) {
+            if (!canFlip) return;
+            
+            const card = document.querySelector(`.matching-card[data-index="${index}"]`);
+            
+            // Don't flip if already flipped or matched
+            if (card.classList.contains('flipped') || card.classList.contains('matched')) {
+                return;
+            }
+            
+            // Flip the card
+            card.classList.add('flipped');
+            flippedCards.push(index);
+            
+            // Speak the card value
+            speak(matchingCards[index]);
+            
+            // Check if we have 2 cards flipped
+            if (flippedCards.length === 2) {
+                canFlip = false;
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [index1, index2] = flippedCards;
+            const card1 = document.querySelector(`.matching-card[data-index="${index1}"]`);
+            const card2 = document.querySelector(`.matching-card[data-index="${index2}"]`);
+            
+            if (matchingCards[index1] === matchingCards[index2]) {
+                // Match!
+                setTimeout(() => {
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    
+                    speak("Great match!");
+                    matchedPairs++;
+                    score += 5;
+                    updateScore();
+                    
+                    flippedCards = [];
+                    canFlip = true;
+                    
+                    // Check if all pairs found
+                    const totalPairs = matchingCards.length / 2;
+                    if (matchedPairs >= totalPairs) {
+                        clearInterval(timerInterval);
+                        setTimeout(() => {
+                            showSuccess();
+                            speak("You found all the pairs! Amazing!");
+                            score += 20;
+                            updateScore();
+                            setTimeout(() => onQuestionComplete(true), 2000);
+                        }, 500);
+                    }
+                }, 500);
+            } else {
+                // No match
+                setTimeout(() => {
+                    card1.classList.add('wrong');
+                    card2.classList.add('wrong');
+                    speak("Not a match! Try again!");
+                    
+                    setTimeout(() => {
+                        card1.classList.remove('flipped', 'wrong');
+                        card2.classList.remove('flipped', 'wrong');
+                        flippedCards = [];
+                        canFlip = true;
+                    }, 1000);
+                }, 500);
+            }
+        }
+
+        // Tracing Game - Letters and Numbers
+        let tracingCanvas = null;
+        let tracingCtx = null;
+        let isDrawing = false;
+        let currentTracingItem = '';
+
+        function startTracingGame() {
+            // Pick a random letter or number
+            const items = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+                          'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                          '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+            currentTracingItem = items[Math.floor(Math.random() * items.length)];
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Trace the ${currentTracingItem}!</div>
+                <div class="tracing-container">
+                    <div class="tracing-display">${currentTracingItem}</div>
+                    <canvas id="tracingCanvas" width="400" height="400"></canvas>
+                    <div class="tracing-buttons">
+                        <button class="clear-btn" onclick="clearTracing()">🗑️ Clear</button>
+                        <button class="next-btn" onclick="startTracingGame()">⏭️ Next ${Math.random() < 0.5 ? 'Letter' : 'Number'}</button>
+                    </div>
+                </div>
+                <div class="feedback" id="feedback"></div>
+            `;
+
+            document.getElementById('gameArea').innerHTML = html;
+
+            // Initialize canvas
+            tracingCanvas = document.getElementById('tracingCanvas');
+            tracingCtx = tracingCanvas.getContext('2d');
+            
+            // Draw the letter/number outline on canvas
+            drawTracingGuide();
+
+            // Set up drawing
+            setupTracingCanvas();
+
+            speak(`Trace the ${currentTracingItem}! Use your finger or mouse to draw!`);
+            startTimer();
+        }
+
+        function drawTracingGuide() {
+            tracingCtx.clearRect(0, 0, tracingCanvas.width, tracingCanvas.height);
+            
+            // Draw the letter/number in light gray as a guide
+            tracingCtx.font = 'bold 300px Arial';
+            tracingCtx.fillStyle = '#f0f0f0';
+            tracingCtx.textAlign = 'center';
+            tracingCtx.textBaseline = 'middle';
+            tracingCtx.fillText(currentTracingItem, tracingCanvas.width / 2, tracingCanvas.height / 2);
+            
+            // Draw outline
+            tracingCtx.strokeStyle = '#d0d0d0';
+            tracingCtx.lineWidth = 8;
+            tracingCtx.strokeText(currentTracingItem, tracingCanvas.width / 2, tracingCanvas.height / 2);
+        }
+
+        function setupTracingCanvas() {
+            let drawing = false;
+
+            // Mouse events
+            tracingCanvas.addEventListener('mousedown', startDrawing);
+            tracingCanvas.addEventListener('mousemove', draw);
+            tracingCanvas.addEventListener('mouseup', stopDrawing);
+            tracingCanvas.addEventListener('mouseout', stopDrawing);
+
+            // Touch events
+            tracingCanvas.addEventListener('touchstart', handleTouchStartDraw);
+            tracingCanvas.addEventListener('touchmove', handleTouchMoveDraw);
+            tracingCanvas.addEventListener('touchend', stopDrawing);
+
+            function startDrawing(e) {
+                drawing = true;
+                const rect = tracingCanvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                tracingCtx.beginPath();
+                tracingCtx.moveTo(x, y);
+            }
+
+            function draw(e) {
+                if (!drawing) return;
+                
+                const rect = tracingCanvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                tracingCtx.strokeStyle = '#667eea';
+                tracingCtx.lineWidth = 20;
+                tracingCtx.lineCap = 'round';
+                tracingCtx.lineJoin = 'round';
+                tracingCtx.lineTo(x, y);
+                tracingCtx.stroke();
+            }
+
+            function stopDrawing() {
+                if (drawing) {
+                    drawing = false;
+                    tracingCtx.beginPath();
+                    
+                    // Give encouragement
+                    const encouragements = [
+                        "God bless you!",
+                        "Jesus loves you!",
+                        "Well done, good job!",
+                        "God is pleased!",
+                        "Praise the Lord!"
+                    ];
+                    const feedback = document.getElementById('feedback');
+                    if (feedback && Math.random() < 0.3) { // 30% chance of encouragement
+                        feedback.textContent = encouragements[Math.floor(Math.random() * encouragements.length)] + ' 🌟';
+                        feedback.className = 'feedback correct';
+                        setTimeout(() => {
+                            feedback.textContent = '';
+                        }, 2000);
+                    }
+                    
+                    score += 5;
+                    updateScore();
+                }
+            }
+
+            function handleTouchStartDraw(e) {
+                e.preventDefault();
+                drawing = true;
+                const rect = tracingCanvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                tracingCtx.beginPath();
+                tracingCtx.moveTo(x, y);
+            }
+
+            function handleTouchMoveDraw(e) {
+                if (!drawing) return;
+                e.preventDefault();
+                
+                const rect = tracingCanvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                tracingCtx.strokeStyle = '#667eea';
+                tracingCtx.lineWidth = 20;
+                tracingCtx.lineCap = 'round';
+                tracingCtx.lineJoin = 'round';
+                tracingCtx.lineTo(x, y);
+                tracingCtx.stroke();
+            }
+        }
+
+        function clearTracing() {
+            if (tracingCtx) {
+                drawTracingGuide();
+            }
+            speak("Canvas cleared! Try again!");
+        }
+
+        // "Pick All the Same" Game - Select all matching items
+        let targetItem = '';
+        let pickSameType = '';
+        let correctIndices = [];
+        let selectedIndices = [];
+
+        function startPickSameGame() {
+            // Randomly pick: numbers, letters, shapes, or colors
+            const types = ['number', 'letter', 'shape', 'color'];
+            pickSameType = types[Math.floor(Math.random() * types.length)];
+            selectedIndices = [];
+
+            switch(pickSameType) {
+                case 'number':
+                    startPickSameNumber();
+                    break;
+                case 'letter':
+                    startPickSameLetter();
+                    break;
+                case 'shape':
+                    startPickSameShape();
+                    break;
+                case 'color':
+                    startPickSameColor();
+                    break;
+            }
+        }
+
+        function startPickSameNumber() {
+            const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            targetItem = numbers[Math.floor(Math.random() * numbers.length)];
+            
+            // Create grid with 6 items: some matching, some not
+            let items = [];
+            let numMatching = 2 + Math.floor(Math.random() * 2); // 2-3 matching items
+            
+            // Add matching items
+            for(let i = 0; i < numMatching; i++) {
+                items.push(targetItem);
+            }
+            
+            // Add different items
+            while(items.length < 6) {
+                let diffNum = numbers[Math.floor(Math.random() * numbers.length)];
+                if(diffNum !== targetItem) {
+                    items.push(diffNum);
+                }
+            }
+            
+            // Shuffle
+            for(let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            
+            // Find correct indices
+            correctIndices = [];
+            items.forEach((item, index) => {
+                if(item === targetItem) correctIndices.push(index);
+            });
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Pick all the ${targetItem}s!</div>
+                <div class="pick-same-grid">
+            `;
+
+            items.forEach((num, index) => {
+                html += `<div class="pick-same-item" onclick="togglePickSame(${index})" data-index="${index}">${num}</div>`;
+            });
+
+            html += `</div>
+                <button class="check-btn" onclick="checkPickSameAnswer()">✓ Check Answer</button>
+                <div class="feedback" id="feedback"></div>`;
+            
+            document.getElementById('gameArea').innerHTML = html;
+            speak(`Pick all the ${targetItem}s! Tap each one you find!`);
+            startTimer();
+        }
+
+        function startPickSameLetter() {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            targetItem = alphabet[Math.floor(Math.random() * alphabet.length)];
+            
+            let items = [];
+            let numMatching = 2 + Math.floor(Math.random() * 2);
+            
+            for(let i = 0; i < numMatching; i++) {
+                items.push(targetItem);
+            }
+            
+            while(items.length < 6) {
+                let diffLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if(diffLetter !== targetItem) {
+                    items.push(diffLetter);
+                }
+            }
+            
+            for(let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            
+            correctIndices = [];
+            items.forEach((item, index) => {
+                if(item === targetItem) correctIndices.push(index);
+            });
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Pick all the ${targetItem}s!</div>
+                <div class="pick-same-grid">
+            `;
+
+            items.forEach((letter, index) => {
+                html += `<div class="pick-same-item" onclick="togglePickSame(${index})" data-index="${index}">${letter}</div>`;
+            });
+
+            html += `</div>
+                <button class="check-btn" onclick="checkPickSameAnswer()">✓ Check Answer</button>
+                <div class="feedback" id="feedback"></div>`;
+            
+            document.getElementById('gameArea').innerHTML = html;
+            speak(`Pick all the letter ${targetItem}s! Tap each one you find!`);
+            startTimer();
+        }
+
+        function startPickSameShape() {
+            const shapes = ['circle', 'square', 'triangle', 'star', 'heart'];
+            targetItem = shapes[Math.floor(Math.random() * shapes.length)];
+            
+            let items = [];
+            let numMatching = 2 + Math.floor(Math.random() * 2);
+            
+            for(let i = 0; i < numMatching; i++) {
+                items.push(targetItem);
+            }
+            
+            while(items.length < 6) {
+                let diffShape = shapes[Math.floor(Math.random() * shapes.length)];
+                if(diffShape !== targetItem) {
+                    items.push(diffShape);
+                }
+            }
+            
+            for(let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            
+            correctIndices = [];
+            items.forEach((item, index) => {
+                if(item === targetItem) correctIndices.push(index);
+            });
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Pick all the ${getShapeLabel(targetItem)}s!</div>
+                <div class="pick-same-grid">
+            `;
+
+            items.forEach((shape, index) => {
+                html += `
+                    <div class="pick-same-item" onclick="togglePickSame(${index})" data-index="${index}">
+                        ${getShapeSVG(shape, '#667eea')}
+                    </div>
+                `;
+            });
+
+            html += `</div>
+                <button class="check-btn" onclick="checkPickSameAnswer()">✓ Check Answer</button>
+                <div class="feedback" id="feedback"></div>`;
+            
+            document.getElementById('gameArea').innerHTML = html;
+            speak(`Pick all the ${getShapeLabel(targetItem)}s! Tap each one you find!`);
+            startTimer();
+        }
+
+        function startPickSameColor() {
+            const colorEmojis = {
+                red: '🔴',
+                blue: '🔵',
+                yellow: '🟡',
+                green: '🟢',
+                purple: '🟣',
+                orange: '🟠'
+            };
+            
+            const colorNames = Object.keys(colorEmojis);
+            targetItem = colorNames[Math.floor(Math.random() * colorNames.length)];
+            
+            let items = [];
+            let numMatching = 2 + Math.floor(Math.random() * 2);
+            
+            for(let i = 0; i < numMatching; i++) {
+                items.push(targetItem);
+            }
+            
+            while(items.length < 6) {
+                let diffColor = colorNames[Math.floor(Math.random() * colorNames.length)];
+                if(diffColor !== targetItem) {
+                    items.push(diffColor);
+                }
+            }
+            
+            for(let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            
+            correctIndices = [];
+            items.forEach((item, index) => {
+                if(item === targetItem) correctIndices.push(index);
+            });
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Pick all the ${targetItem} circles!</div>
+                <div class="pick-same-grid">
+            `;
+
+            items.forEach((color, index) => {
+                html += `<div class="pick-same-item" onclick="togglePickSame(${index})" data-index="${index}">${colorEmojis[color]}</div>`;
+            });
+
+            html += `</div>
+                <button class="check-btn" onclick="checkPickSameAnswer()">✓ Check Answer</button>
+                <div class="feedback" id="feedback"></div>`;
+            
+            document.getElementById('gameArea').innerHTML = html;
+            speak(`Pick all the ${targetItem} circles! Tap each one you find!`);
+            startTimer();
+        }
+
+        function togglePickSame(index) {
+            const item = document.querySelector(`.pick-same-item[data-index="${index}"]`);
+            
+            if(selectedIndices.includes(index)) {
+                // Deselect
+                selectedIndices = selectedIndices.filter(i => i !== index);
+                item.classList.remove('selected');
+            } else {
+                // Select
+                selectedIndices.push(index);
+                item.classList.add('selected');
+            }
+        }
+
+        function checkPickSameAnswer() {
+            clearInterval(timerInterval);
+            const feedback = document.getElementById('feedback');
+            const items = document.querySelectorAll('.pick-same-item');
+            const checkBtn = document.querySelector('.check-btn');
+            checkBtn.disabled = true;
+
+            // Check if all correct ones are selected and no wrong ones
+            let allCorrect = correctIndices.every(i => selectedIndices.includes(i));
+            let noWrong = selectedIndices.every(i => correctIndices.includes(i));
+
+            if(allCorrect && noWrong && selectedIndices.length > 0) {
+                // Perfect!
+                items.forEach((item, index) => {
+                    if(selectedIndices.includes(index)) {
+                        item.classList.remove('selected');
+                        item.classList.add('correct-picked');
+                    }
+                });
+                feedback.textContent = '🎉 Perfect! You found them all!';
+                feedback.className = 'feedback correct';
+                speak(`Yes! You found all the ${targetItem}s! Amazing!`);
+                score += 15;
+                updateScore();
+                setTimeout(startPickSameGame, 3000);
+            } else {
+                // Wrong or incomplete
+                items.forEach((item, index) => {
+                    item.classList.remove('selected');
+                    if(selectedIndices.includes(index) && !correctIndices.includes(index)) {
+                        item.classList.add('wrong-picked');
+                    } else if(!selectedIndices.includes(index) && correctIndices.includes(index)) {
+                        // Missed one - don't mark it
+                    } else if(selectedIndices.includes(index)) {
+                        item.classList.add('correct-picked');
+                    }
+                });
+                
+                feedback.innerHTML = '😊 Not quite!<br><button class="next-btn" onclick="startPickSameGame()" style="margin: 5px;">🔄 Try Again</button><button class="next-btn" onclick="startPickSameGame()" style="margin: 5px;">⏭️ Skip</button>';
+                feedback.className = 'feedback wrong';
+                speak(`Not quite! Try again or skip to the next one!`);
+            }
+        }
+
+        // Shape Identification Game
+        let currentShape = '';
+
+        function startShapesGame() {
+            const shapes = [
+                {name: 'circle', label: 'Circle'},
+                {name: 'square', label: 'Square'},
+                {name: 'triangle', label: 'Triangle'},
+                {name: 'rectangle', label: 'Rectangle'},
+                {name: 'star', label: 'Star'},
+                {name: 'heart', label: 'Heart'}
+            ];
+            
+            const selectedShape = shapes[Math.floor(Math.random() * shapes.length)];
+            currentShape = selectedShape.name;
+            const color = '#667eea';
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">What shape is this?</div>
+                <div class="shape-display">
+                    ${getShapeSVG(selectedShape.name, color)}
+                </div>
+                <div class="answer-buttons">
+            `;
+
+            // Create 4 shape name options
+            let options = [selectedShape];
+            while(options.length < 4) {
+                let randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+                if(!options.find(s => s.name === randomShape.name)) {
+                    options.push(randomShape);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(shape => {
+                html += `<button class="answer-btn" onclick="checkShapeAnswer('${shape.name}')" style="font-size: 1.3em; width: auto; padding: 15px 25px;">${shape.label}</button>`;
+            });
+
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+
+            speak(`What shape is this? Is it a ${selectedShape.label}?`);
+            startTimer();
+        }
+
+        function checkShapeAnswer(selected) {
+            clearInterval(timerInterval);
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.answer-btn');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                const btnShape = btn.onclick.toString().match(/'([^']+)'/)[1];
+                if(btnShape === selected) {
+                    if(selected === currentShape) {
+                        btn.classList.add('correct');
+                        feedback.textContent = '🎉 Perfect!';
+                        feedback.className = 'feedback correct';
+                        const shapeName = getShapeLabel(currentShape);
+                        speak(`Yes! That's a ${shapeName}! Great job!`);
+                        score += 10;
+                        updateScore();
+                        setTimeout(startShapesGame, 3000);
+                    } else {
+                        btn.classList.add('wrong');
+                        feedback.innerHTML = '😊 Try again!<br><button class="next-btn" onclick="resetShapeButtons()" style="margin: 5px;">🔄 Try Again</button><button class="next-btn" onclick="startShapesGame()" style="margin: 5px;">⏭️ Skip</button>';
+                        feedback.className = 'feedback wrong';
+                        speak(`Not quite! You can try again or skip!`);
+                    }
+                }
+            });
+        }
+
+        function resetShapeButtons() {
+            const buttons = document.querySelectorAll('.answer-btn');
+            const feedback = document.getElementById('feedback');
+            
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('wrong', 'correct');
+            });
+            
+            feedback.innerHTML = '';
+            speak("Try again! What shape is this?");
+        }
+
+        function getShapeLabel(shapeName) {
+            const labels = {
+                circle: 'circle',
+                square: 'square',
+                triangle: 'triangle',
+                rectangle: 'rectangle',
+                star: 'star',
+                heart: 'heart'
+            };
+            return labels[shapeName] || shapeName;
+        }
+
+        // "Which is Different?" Game - Find the odd one out
+        let differentAnswer = -1;
+
+        function startMixedGame() {
+            // Randomly pick: numbers, letters, shapes, or colors
+            const types = ['number', 'letter', 'shape', 'color'];
+            const gameType = types[Math.floor(Math.random() * types.length)];
+
+            switch(gameType) {
+                case 'number':
+                    startDifferentNumber();
+                    break;
+                case 'letter':
+                    startDifferentLetter();
+                    break;
+                case 'shape':
+                    startDifferentShape();
+                    break;
+                case 'color':
+                    startDifferentColor();
+                    break;
+            }
+        }
+
+        function startDifferentNumber() {
+            // Show 4 items: 3 same numbers, 1 different
+            const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            const sameNum = numbers[Math.floor(Math.random() * numbers.length)];
+            let diffNum = numbers[Math.floor(Math.random() * numbers.length)];
+            while(diffNum === sameNum) {
+                diffNum = numbers[Math.floor(Math.random() * numbers.length)];
+            }
+
+            // Create array with 3 same and 1 different
+            let items = [sameNum, sameNum, sameNum, diffNum];
+            
+            // Shuffle and find different position
+            for(let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            differentAnswer = items.indexOf(diffNum);
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Which number is different?</div>
+                <div class="different-grid">
+            `;
+
+            items.forEach((num, index) => {
+                html += `<div class="different-item" onclick="checkDifferentAnswer(${index})">${num}</div>`;
+            });
+
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+
+            speak(`Which number is different? Look carefully!`);
+            startTimer();
+        }
+
+        function startDifferentLetter() {
+            // Show 4 items: 3 same letters, 1 different
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const sameLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+            let diffLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+            while(diffLetter === sameLetter) {
+                diffLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+            }
+
+            let items = [sameLetter, sameLetter, sameLetter, diffLetter];
+            
+            // Shuffle
+            for(let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            differentAnswer = items.indexOf(diffLetter);
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Which letter is different?</div>
+                <div class="different-grid">
+            `;
+
+            items.forEach((letter, index) => {
+                html += `<div class="different-item" onclick="checkDifferentAnswer(${index})">${letter}</div>`;
+            });
+
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+
+            speak(`Which letter is different? Look carefully!`);
+            startTimer();
+        }
+
+        function startDifferentShape() {
+            const shapes = ['circle', 'square', 'triangle', 'rectangle', 'star', 'heart'];
+            const sameShape = shapes[Math.floor(Math.random() * shapes.length)];
+            let diffShape = shapes[Math.floor(Math.random() * shapes.length)];
+            while(diffShape === sameShape) {
+                diffShape = shapes[Math.floor(Math.random() * shapes.length)];
+            }
+
+            let items = [sameShape, sameShape, sameShape, diffShape];
+            
+            // Shuffle
+            for(let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            differentAnswer = items.indexOf(diffShape);
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Which shape is different?</div>
+                <div class="different-grid">
+            `;
+
+            items.forEach((shape, index) => {
+                html += `
+                    <div class="different-item" onclick="checkDifferentAnswer(${index})">
+                        ${getShapeSVG(shape, '#667eea')}
+                    </div>
+                `;
+            });
+
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+
+            speak(`Which shape is different? Look carefully!`);
+            startTimer();
+        }
+
+        function startDifferentColor() {
+            const colorEmojis = {
+                red: '🔴',
+                blue: '🔵',
+                yellow: '🟡',
+                green: '🟢',
+                purple: '🟣',
+                orange: '🟠'
+            };
+            
+            const colorNames = Object.keys(colorEmojis);
+            const sameColor = colorNames[Math.floor(Math.random() * colorNames.length)];
+            let diffColor = colorNames[Math.floor(Math.random() * colorNames.length)];
+            while(diffColor === sameColor) {
+                diffColor = colorNames[Math.floor(Math.random() * colorNames.length)];
+            }
+
+            let items = [sameColor, sameColor, sameColor, diffColor];
+            
+            // Shuffle
+            for(let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            differentAnswer = items.indexOf(diffColor);
+
+            let html = `
+                ${getTimerHTML()}
+                <button class="speaker-btn" onclick="speakInstructions()">🔊</button>
+                <div class="instruction" id="instruction">Which color is different?</div>
+                <div class="different-grid">
+            `;
+
+            items.forEach((color, index) => {
+                html += `<div class="different-item" onclick="checkDifferentAnswer(${index})">${colorEmojis[color]}</div>`;
+            });
+
+            html += '</div><div class="feedback" id="feedback"></div>';
+            document.getElementById('gameArea').innerHTML = html;
+
+            speak(`Which color is different? Look carefully!`);
+            startTimer();
+        }
+
+        function checkDifferentAnswer(selected) {
+            clearInterval(timerInterval);
+            const feedback = document.getElementById('feedback');
+            const items = document.querySelectorAll('.different-item');
+
+            items.forEach((item, index) => {
+                if(index === selected) {
+                    if(selected === differentAnswer) {
+                        item.classList.add('correct');
+                        feedback.textContent = '🎉 Perfect! You found it!';
+                        feedback.className = 'feedback correct';
+                        speak(`Yes! That one is different! Great job!`);
+                        score += 10;
+                        updateScore();
+                        setTimeout(startMixedGame, 3000);
+                    } else {
+                        item.classList.add('wrong');
+                        feedback.innerHTML = '😊 Not quite!<br><button class="next-btn" onclick="resetDifferentButtons()" style="margin: 5px;">🔄 Try Again</button><button class="next-btn" onclick="startMixedGame()" style="margin: 5px;">⏭️ Skip</button>';
+                        feedback.className = 'feedback wrong';
+                        speak(`Not quite! Look again or skip!`);
+                    }
+                }
+            });
+        }
+
+        function resetDifferentButtons() {
+            const items = document.querySelectorAll('.different-item');
+            const feedback = document.getElementById('feedback');
+            
+            items.forEach(item => {
+                item.classList.remove('wrong', 'correct');
+            });
+            
+            feedback.innerHTML = '';
+            speak("Try again! Which one is different?");
+        }
+
+        function getShapeSVG(shape, color) {
+            const shapes = {
+                circle: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="${color}"/></svg>`,
+                square: `<svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" fill="${color}"/></svg>`,
+                triangle: `<svg viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="${color}"/></svg>`,
+                rectangle: `<svg viewBox="0 0 100 100"><rect x="10" y="25" width="80" height="50" fill="${color}"/></svg>`,
+                star: `<svg viewBox="0 0 100 100"><polygon points="50,5 61,35 92,35 67,55 78,85 50,65 22,85 33,55 8,35 39,35" fill="${color}"/></svg>`,
+                heart: `<svg viewBox="0 0 100 100"><path d="M50,85 C50,85 15,60 15,40 C15,25 25,15 35,15 C42,15 50,22 50,22 C50,22 58,15 65,15 C75,15 85,25 85,40 C85,60 50,85 50,85 Z" fill="${color}"/></svg>`
+            };
+            return shapes[shape];
+        }
+    </script>
+</body>
+</html>
