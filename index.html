@@ -380,12 +380,38 @@
             transform: scale(1.05);
         }
 
+        .score-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+
         .score {
             text-align: center;
             font-size: 1.2em;
             color: #667eea;
             font-weight: bold;
-            margin-top: 5px;
+        }
+
+        .reset-score-btn {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .reset-score-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
         }
 
         .level-display {
@@ -1193,7 +1219,10 @@
                 </div>
                 <span id="progressText">0/3</span>
             </div>
-            <div class="score" id="score">Score: 0 🌟</div>
+            <div class="score-container">
+                <div class="score" id="score">Score: 0 🌟</div>
+                <button class="reset-score-btn" onclick="resetScore()" aria-label="Reset score">🔄 Reset</button>
+            </div>
         </div>
 
         <div class="mode-selector" id="modeSelector">
@@ -1320,6 +1349,7 @@
             // Reset level system
             currentLevel = 1;
             questionsCompleted = 0;
+            resetScore(false);
             
             // Hide level display
             document.getElementById('levelDisplay').style.display = 'none';
@@ -1902,6 +1932,14 @@
 
         function updateScore() {
             document.getElementById('score').textContent = `Score: ${score} 🌟`;
+        }
+
+        function resetScore(announce = true) {
+            score = 0;
+            updateScore();
+            if (announce) {
+                speak("Score reset! Let's start fresh!");
+            }
         }
 
         // Alphabet game functions
